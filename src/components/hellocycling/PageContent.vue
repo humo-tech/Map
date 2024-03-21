@@ -57,9 +57,9 @@ function createDonutChart(props) {
   const w = r * 4
 
   let html = `<div>
-<svg width="${w}" height="${w}" 
-  viewbox="0 0 ${w} ${w}" 
-  transform="translate(${w / 4}, ${w / 4})" 
+<svg width="${w}" height="${w}"
+  viewbox="0 0 ${w} ${w}"
+  transform="translate(${w / 4}, ${w / 4})"
   text-anchor="middle" style="font: 16px sans-serif; display: block">`
 
   for (let i = 0; i < counts.length; i++) {
@@ -98,6 +98,9 @@ function donutSegment(start, end, r, r0, color) {
 const getData = () => {
   return new Promise((resolve, reject) => {
     const bounds = map.value.getBounds()
+    if (bounds.getWest() - bounds.getEast() > 0.07 || bounds.getNorth() - bounds.getSouth() > 0.07) {
+      return
+    }
     const boundsArray = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()]
     fetch(`${apiEndPoint}/latest_s3?bounds=${JSON.stringify(boundsArray)}`, { headers: { 'X-Api-Key': 'humo-tech' } })
       .then((res) => res.text())
@@ -126,11 +129,22 @@ onMounted(() => {
   map.value = new mapboxgl.Map({
     accessToken: MAPBOX_ACCESS_TOKEN,
     container: mapRef.value,
-    center: [139.5, 35.5],
-    zoom: 9,
+    center: [139.767, 35.681],
+    zoom: 10,
     language: 'ja',
     hash: true,
   })
+  map.value.addControl(
+    new mapboxgl.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true,
+      },
+      trackUserLocation: false,
+      showUserHeading: false,
+    })
+  )
+  map.value.addControl(new mapboxgl.NavigationControl())
+  map.value.addControl(new mapboxgl.ScaleControl())
 
   map.value.on('style.load', async () => {
     // map.value.setConfigProperty('basemap', 'lightPreset', 'dusk')
