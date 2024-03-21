@@ -1,15 +1,5 @@
 ---
-interface Props {
-  title: string
-  subtitle: string
-  description: string
-  thumb: string
-  useCesium: boolean
-}
 
-const baseUrl = import.meta.env.BASE_URL
-const { title, subtitle, description, thumb, useCesium } = Astro.props
-const thumbUrl = `https://humo-tech.github.io${baseUrl}/${thumb}`
 ---
 
 <!doctype html>
