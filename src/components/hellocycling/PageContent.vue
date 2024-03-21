@@ -98,7 +98,7 @@ function donutSegment(start, end, r, r0, color) {
 const getData = () => {
   return new Promise((resolve, reject) => {
     const bounds = map.value.getBounds()
-    if (bounds.getWest() - bounds.getEast() > 0.07 || bounds.getNorth() - bounds.getSouth() > 0.07) {
+    if (bounds.getEast() - bounds.getWest() > 0.07 || bounds.getNorth() - bounds.getSouth() > 0.07) {
       return
     }
     const boundsArray = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()]
