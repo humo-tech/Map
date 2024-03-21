@@ -1,0 +1,12 @@
+services:
+    mapchallenge:
+        build:
+            context: .
+        tty: true
+        volumes: 
+            # dokerにマウントするディレクトリ
+            - ./:/app
+            # docker内にだけ存在させしたいディレクトリを以下に記載
+            - /app/node_modules
+        ports:
+            - 43210:4321

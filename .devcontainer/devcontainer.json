@@ -1,0 +1,10 @@
+{
+  "dockerComposeFile": "../docker-compose.yaml",
+  "service": "mapchallenge",
+  "workspaceFolder": "/app",
+  "customizations": {
+    "vscode": {
+      "extensions": ["Vue.volar", "Vue.vscode-typescript-vue-plugin", "esbenp.prettier-vscode", "astro-build.astro-vscode", "dbaeumer.vscode-eslint"]
+    }
+  }
+}
