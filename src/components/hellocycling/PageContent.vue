@@ -98,6 +98,9 @@ function donutSegment(start, end, r, r0, color) {
 const getData = () => {
   return new Promise((resolve, reject) => {
     const bounds = map.value.getBounds()
+    if (bounds.getWest() - bounds.getEast() > 0.07 || bounds.getNorth() - bounds.getSouth() > 0.07) {
+      return
+    }
     const boundsArray = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()]
     fetch(`${apiEndPoint}/latest_s3?bounds=${JSON.stringify(boundsArray)}`, { headers: { 'X-Api-Key': 'humo-tech' } })
       .then((res) => res.text())
