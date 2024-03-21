@@ -57,9 +57,9 @@ function createDonutChart(props) {
   const w = r * 4
 
   let html = `<div>
-<svg width="${w}" height="${w}" 
-  viewbox="0 0 ${w} ${w}" 
-  transform="translate(${w / 4}, ${w / 4})" 
+<svg width="${w}" height="${w}"
+  viewbox="0 0 ${w} ${w}"
+  transform="translate(${w / 4}, ${w / 4})"
   text-anchor="middle" style="font: 16px sans-serif; display: block">`
 
   for (let i = 0; i < counts.length; i++) {
@@ -134,6 +134,17 @@ onMounted(() => {
     language: 'ja',
     hash: true,
   })
+  map.value.addControl(
+    new mapboxgl.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true,
+      },
+      trackUserLocation: false,
+      showUserHeading: false,
+    })
+  )
+  map.value.addControl(new mapboxgl.NavigationControl())
+  map.value.addControl(new mapboxgl.ScaleControl())
 
   map.value.on('style.load', async () => {
     // map.value.setConfigProperty('basemap', 'lightPreset', 'dusk')
