@@ -13,6 +13,8 @@
     "@astrojs/vue": "^4.0.8",
     "astro": "^4.4.4",
     "cesium": "^1.114.0",
+    "csv2geojson": "^5.1.2",
+    "mapbox-gl": "^3.1.2",
     "vite-plugin-cesium": "^1.2.22",
     "vue": "^3.4.19"
   },
