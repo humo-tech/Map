@@ -23,7 +23,7 @@ function updateMarkers() {
   for (const feature of features) {
     const coords = feature.geometry.coordinates
     const props = feature.properties
-    const id = props.station_id
+    const id = props.station_id || props.cluster_id
 
     let marker = markers[id]
     if (!marker) {
@@ -52,7 +52,7 @@ function createDonutChart(props) {
     total += count
   }
   // const r = total >= 1000 ? 50 : total >= 100 ? 32 : total >= 10 ? 24 : 18
-  const r = Math.max(total, 20)
+  const r = Math.max(Math.sqrt(total) * 6, 20)
   const r0 = Math.round(r * 0.6)
   const w = r * 4
 
@@ -164,18 +164,18 @@ onMounted(() => {
     map.value.addSource('stations', {
       type: 'geojson',
       data,
+      cluster: true,
+      clusterRadius: 30,
+      clusterProperties: {
+        num_docks_available: ['+', ['get', 'num_docks_available']],
+        num_bikes_available: ['+', ['get', 'num_bikes_available']],
+      },
     })
 
     map.value.addLayer({
       id: 'station_label',
       type: 'symbol',
       source: 'stations',
-      filter: ['!=', 'cluster', true],
-      paint: {
-        'text-color': colors[0],
-        'text-halo-color': '#000',
-        'text-halo-width': 1,
-      },
     })
   })
   map.value.on('render', () => {
