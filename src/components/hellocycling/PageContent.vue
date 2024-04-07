@@ -164,7 +164,7 @@ onMounted(() => {
     map.value.addSource('stations', {
       type: 'geojson',
       data,
-      cluster: true,
+      cluster: false,
       clusterRadius: 30,
       clusterProperties: {
         num_docks_available: ['+', ['get', 'num_docks_available']],
