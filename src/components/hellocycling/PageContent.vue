@@ -156,14 +156,9 @@ onMounted(() => {
         'background-opacity': 0.6,
       },
     })
-    const data = await getData()
-    console.log(data)
-    console.log(
-      data.features.map((feature) => feature.properties.num_docks_available).reduce((acc, cur) => acc + cur, 0)
-    )
     map.value.addSource('stations', {
       type: 'geojson',
-      data,
+      data: { type: 'FeatureCollection', features: [] },
       cluster: false,
       clusterRadius: 30,
       clusterProperties: {
@@ -177,6 +172,13 @@ onMounted(() => {
       type: 'symbol',
       source: 'stations',
     })
+
+    try {
+      const data = await getData()
+      map.value.getSource('stations').setData(data)
+    } catch (e) {
+      console.log(e)
+    }
   })
   map.value.on('render', () => {
     if (!map.value.getSource('stations') || !map.value.isSourceLoaded('stations')) return
