@@ -129,8 +129,8 @@ onMounted(() => {
   map.value = new mapboxgl.Map({
     accessToken: MAPBOX_ACCESS_TOKEN,
     container: mapRef.value,
-    center: [139.767, 35.681],
-    zoom: 10,
+    center: [139.767, 35.71],
+    zoom: window.innerWidth < 800 ? 13 : 14,
     language: 'ja',
     hash: true,
   })
