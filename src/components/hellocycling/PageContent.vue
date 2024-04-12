@@ -156,14 +156,9 @@ onMounted(() => {
         'background-opacity': 0.6,
       },
     })
-    const data = await getData()
-    console.log(data)
-    console.log(
-      data.features.map((feature) => feature.properties.num_docks_available).reduce((acc, cur) => acc + cur, 0)
-    )
     map.value.addSource('stations', {
       type: 'geojson',
-      data,
+      data: { type: 'FeatureCollection', features: [] },
       cluster: false,
       clusterRadius: 30,
       clusterProperties: {
@@ -177,6 +172,13 @@ onMounted(() => {
       type: 'symbol',
       source: 'stations',
     })
+
+    try {
+      const data = await getData()
+      map.value.getSource('stations').setData(data)
+    } catch (e) {
+      console.log(e)
+    }
   })
   map.value.on('render', () => {
     if (!map.value.getSource('stations') || !map.value.isSourceLoaded('stations')) return
@@ -192,11 +194,56 @@ onMounted(() => {
 
 <template>
   <div ref="mapRef" class="map"></div>
+  <div class="legend">
+    <ul>
+      <li>駐輪可能</li>
+      <li>貸出可能</li>
+    </ul>
+    <div class="memo">※ 数字は駐輪可能台数</div>
+  </div>
 </template>
 
 <style scoped>
 .map {
   width: 100%;
   height: 100%;
+}
+.legend {
+  border: 1px solid #999;
+  border-radius: 5px;
+  background-color: #000;
+  color: #fff;
+  position: absolute;
+  bottom: 40px;
+  right: 10px;
+  z-index: 2;
+  padding: 10px;
+}
+.legend ul {
+  padding: 0px;
+  margin: 5px;
+  list-style-type: none;
+  padding-bottom: 5px;
+}
+.legend ul li::before {
+  content: '';
+  display: inline-block;
+  width: 0.9em;
+  height: 0.9em;
+  border-radius: 20%;
+  border: 1px solid #999;
+  margin-right: 5px;
+  position: relative;
+  top: 1px;
+}
+.legend ul li:nth-child(1)::before {
+  background-color: v-bind(colors[0]);
+}
+.legend ul li:nth-child(2)::before {
+  background-color: v-bind(colors[1]);
+}
+.memo {
+  font-size: 10px;
+  color: #aaa;
 }
 </style>
