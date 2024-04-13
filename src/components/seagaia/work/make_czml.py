@@ -46,10 +46,10 @@ time_format = '%Y-%m-%dT%H:%M:%SZ'
 time0 = datetime.strptime('2024-06-30T08:30:00 +0900', '%Y-%m-%dT%H:%M:%S %z') 
 
 conf = [
-	{"key": "swim", "speed": 3 / 3.6, "index": 2, "color": [0, 255, 255]},
-	{"key": "swim_bike", "speed": 5 / 3.6, "index": 1, "color": [0, 125, 125]},
-	{"key": "bike", "speed": 30 / 3.6, "index": 3, "color": [0, 255, 0]},
-	{"key": "run", "speed": 10 / 3.6, "index": 0, "color": [255, 255, 0]},
+	{"key": "swim", "speed": 3 / 3.6, "index": 2, "color": [0, 255, 255, 255], "alt": 30,},
+	{"key": "swim_bike", "speed": 5 / 3.6, "index": 1, "color": [0, 125, 125, 255], "alt": 38},
+	{"key": "bike", "speed": 30 / 3.6, "index": 3, "color": [0, 255, 0, 255], "alt": 40},
+	{"key": "run", "speed": 10 / 3.6, "index": 0, "color": [255, 255, 0, 255], "alt": 38},
 ]
 
 start_time = time0
@@ -57,7 +57,7 @@ for part in conf:
 	total_distance = get_total_distance(geojson['features'][part['index']])
 	total_time = total_distance / part['speed']
 	print(total_distance, total_time)
-	end_time = start_time + timedelta(seconds = total_time + 10)
+	end_time = start_time + timedelta(seconds = total_time)
 	print(start_time.astimezone(timezone.utc).strftime(time_format))
 	print(end_time.astimezone(timezone.utc).strftime(time_format))
 	route = {
@@ -81,7 +81,7 @@ for part in conf:
 		'width': 5.0,
 	  	'show': True,
 		'leadTime': 10,
-		'trailTime': 1000,
+		'trailTime': total_time,
 		'resolution': 5,
 	},
     #"viewFrom": {
@@ -107,7 +107,7 @@ for part in conf:
 		route['position']['cartographicDegrees'].append(int(time_past))
 		route['position']['cartographicDegrees'].append(coords[i][0])
 		route['position']['cartographicDegrees'].append(coords[i][1])
-		route['position']['cartographicDegrees'].append(50)
+		route['position']['cartographicDegrees'].append(part["alt"])
 	
 	
 	czml = [{'id': 'document', 'version': '1.0'}, route]
