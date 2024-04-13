@@ -65,7 +65,7 @@ const setRoute = () => {
     const timeRemain = JulianDate.secondsDifference(clock.stopTime, clock.currentTime)
     if ((timeRemain < 5 || stageCount.value === 0) && !loading) {
       viewer.clock.shouldAnimate = false
-      if(stageCount.value < stages.length) {
+      if (stageCount.value < stages.length) {
         loading = true
         const dataSource = await viewer.dataSources.add(
           CzmlDataSource.load(`${baseUrl}/seagaia/${stages[stageCount.value]}.czml`)
@@ -83,7 +83,7 @@ const setRoute = () => {
 
 <template>
   <h1>
-    MIYAZAKI SEA GAIA TRIATHRON <span v-show="stage">({{ stage }})</span>
+    MIYAZAKI SEAGAIA TRIATHRON <span v-show="stage">({{ stage }})</span>
   </h1>
   <div id="map" class="map"></div>
 </template>
