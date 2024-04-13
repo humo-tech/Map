@@ -63,17 +63,19 @@ onMounted(async () => {
 const setRoute = () => {
   viewer.clock.onTick.addEventListener(async (clock) => {
     const timeRemain = JulianDate.secondsDifference(clock.stopTime, clock.currentTime)
-    if ((timeRemain < 5 || stageCount.value === 0) && !loading && stageCount.value < stages.length) {
+    if ((timeRemain < 5 || stageCount.value === 0) && !loading) {
       viewer.clock.shouldAnimate = false
-      loading = true
-      const dataSource = await viewer.dataSources.add(
-        CzmlDataSource.load(`${baseUrl}/seagaia/${stages[stageCount.value]}.czml`)
-      )
-      viewer.trackedEntity = dataSource.entities.getById('path')
-      viewer.clock.multiplier = 100
-      viewer.clock.shouldAnimate = true
-      loading = false
-      stageCount.value++
+      if(stageCount.value < stages.length) {
+        loading = true
+        const dataSource = await viewer.dataSources.add(
+          CzmlDataSource.load(`${baseUrl}/seagaia/${stages[stageCount.value]}.czml`)
+        )
+        viewer.trackedEntity = dataSource.entities.getById('path')
+        viewer.clock.multiplier = 100
+        viewer.clock.shouldAnimate = true
+        loading = false
+        stageCount.value++
+      }
     }
   })
 }
