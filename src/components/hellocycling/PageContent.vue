@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import maplibregl from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import csv2geojson from 'csv2geojson'
+import { useRadar } from './useRadar'
 
 const mapRef = ref(null)
 const map = ref(null)
@@ -11,12 +12,20 @@ const apiKey =
   'v1.public.eyJqdGkiOiIyNDg1NDVhMi05YmE1LTRhNDgtYjRiMC1mOTE5NDU0NWViODYifaxbKAPbqsNmvLHiTfbKS_deE4bmKO7K_cZJYT6TRIw_Pn7ijG7i-lKIz4kFmZsaTWWWG4axhS0OZ7Zh1YSWFzlhjt1NeoQNgHl_wS4u5LKhIOzJD1cDRlG-c5ptLitkeQ_j5G3RZxWw2pVObaGnhldTqowIHRVZzobFItbVCriVEhiswNrULQ9HpmI4nFAWIrsTUAgLor_yAH8lJGuFFFeDGSD9S4jViBDc3fu_lpuv5ldvFxTQi9C8-9r5mzqO7cJ_r_-B1DqqbjOw6Og35JXg5kBZlXxCVjeTv3OXjg76QiEJp7XD1QvLWHp7PxVZDtkeGtOJrAT5MNDUpMT3eoc.YTAwN2QzYTQtMjA4OC00M2Q5LWE5ZTUtYjk4Y2U1YWUxY2Uy'
 const mapName = 'OpenDataStandardLight'
 const region = 'ap-northeast-1'
+const { setRadar } = useRadar()
 
 const apiEndPoint = 'https://7gd6dzwqumv6fpa62pn6nvwd240zdckd.lambda-url.ap-northeast-1.on.aws'
 
 const markers = {}
 let markersOnScreen = {}
 const colors = ['#1196fc', '#fcf411']
+
+// const showChart = (event) => {
+//   const stationId = event.target.dataset.stationId
+//   if (stationId) {
+//     fetch(`${apiEndPoint}/bystation?station_id=${stationId}&hour=12`, { headers: { 'X-Api-Key': 'humo-tech' } })
+//   }
+// }
 
 function updateMarkers() {
   const newMarkers = {}
@@ -35,6 +44,7 @@ function updateMarkers() {
       marker = markers[id] = new maplibregl.Marker({
         element: el,
       }).setLngLat(coords)
+      // el.addEventListener('click', showChart)
     }
     newMarkers[id] = marker
 
@@ -60,7 +70,7 @@ function createDonutChart(props) {
   const r0 = Math.round(r * 0.6)
   const w = r * 4
 
-  let html = `<div>
+  let html = `<div data-station-id="${props.station_id}" class="marker">
 <svg width="${w}" height="${w}"
   viewbox="0 0 ${w} ${w}"
   transform="translate(${w / 4}, ${w / 4})"
@@ -184,7 +194,9 @@ onMounted(() => {
     } catch (e) {
       console.log(e)
     }
+    setRadar(map.value)
   })
+
   map.value.on('render', () => {
     if (!map.value.getSource('stations') || !map.value.isSourceLoaded('stations')) return
     updateMarkers()
@@ -250,5 +262,10 @@ onMounted(() => {
 .memo {
   font-size: 10px;
   color: #aaa;
+}
+</style>
+<style>
+.marker * {
+  pointer-events: none !important;
 }
 </style>

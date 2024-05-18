@@ -1,0 +1,10 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import Content from '@/components/seagaia/index.vue'
+
+const useCesium = import.meta.env.MODE === 'production'
+---
+
+<Layout useCesium={useCesium}>
+  <Content client:load />
+</Layout>
