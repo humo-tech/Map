@@ -15,6 +15,7 @@
     "cesium": "^1.114.0",
     "csv2geojson": "^5.1.2",
     "mapbox-gl": "^3.1.2",
+    "maplibre-gl": "^4.3.1",
     "vite-plugin-cesium": "^1.2.22",
     "vue": "^3.4.19"
   },

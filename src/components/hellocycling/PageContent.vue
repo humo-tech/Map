@@ -1,12 +1,16 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import mapboxgl from 'mapbox-gl'
-import 'mapbox-gl/dist/mapbox-gl.css'
-import { MAPBOX_ACCESS_TOKEN } from '@/const.ts'
+import maplibregl from 'maplibre-gl'
+import 'maplibre-gl/dist/maplibre-gl.css'
 import csv2geojson from 'csv2geojson'
 
 const mapRef = ref(null)
 const map = ref(null)
+
+const apiKey =
+  'v1.public.eyJqdGkiOiIyNDg1NDVhMi05YmE1LTRhNDgtYjRiMC1mOTE5NDU0NWViODYifaxbKAPbqsNmvLHiTfbKS_deE4bmKO7K_cZJYT6TRIw_Pn7ijG7i-lKIz4kFmZsaTWWWG4axhS0OZ7Zh1YSWFzlhjt1NeoQNgHl_wS4u5LKhIOzJD1cDRlG-c5ptLitkeQ_j5G3RZxWw2pVObaGnhldTqowIHRVZzobFItbVCriVEhiswNrULQ9HpmI4nFAWIrsTUAgLor_yAH8lJGuFFFeDGSD9S4jViBDc3fu_lpuv5ldvFxTQi9C8-9r5mzqO7cJ_r_-B1DqqbjOw6Og35JXg5kBZlXxCVjeTv3OXjg76QiEJp7XD1QvLWHp7PxVZDtkeGtOJrAT5MNDUpMT3eoc.YTAwN2QzYTQtMjA4OC00M2Q5LWE5ZTUtYjk4Y2U1YWUxY2Uy'
+const mapName = 'OpenDataStandardLight'
+const region = 'ap-northeast-1'
 
 const apiEndPoint = 'https://7gd6dzwqumv6fpa62pn6nvwd240zdckd.lambda-url.ap-northeast-1.on.aws'
 
@@ -28,7 +32,7 @@ function updateMarkers() {
     let marker = markers[id]
     if (!marker) {
       const el = createDonutChart(props)
-      marker = markers[id] = new mapboxgl.Marker({
+      marker = markers[id] = new maplibregl.Marker({
         element: el,
       }).setLngLat(coords)
     }
@@ -126,16 +130,16 @@ const getData = () => {
 }
 
 onMounted(() => {
-  map.value = new mapboxgl.Map({
-    accessToken: MAPBOX_ACCESS_TOKEN,
+  map.value = new maplibregl.Map({
     container: mapRef.value,
     center: [139.767, 35.71],
+    style: `https://maps.geo.${region}.amazonaws.com/maps/v0/maps/${mapName}/style-descriptor?key=${apiKey}`,
     zoom: window.innerWidth < 800 ? 13 : 14,
     language: 'ja',
     hash: true,
   })
   map.value.addControl(
-    new mapboxgl.GeolocateControl({
+    new maplibregl.GeolocateControl({
       positionOptions: {
         enableHighAccuracy: true,
       },
@@ -143,10 +147,11 @@ onMounted(() => {
       showUserHeading: false,
     })
   )
-  map.value.addControl(new mapboxgl.NavigationControl())
-  map.value.addControl(new mapboxgl.ScaleControl())
+  map.value.addControl(new maplibregl.NavigationControl())
+  map.value.addControl(new maplibregl.ScaleControl())
 
   map.value.on('style.load', async () => {
+    console.log(map.value.getStyle().layers.find((layer) => layer.type === 'symbol'))
     // map.value.setConfigProperty('basemap', 'lightPreset', 'dusk')
     map.value.addLayer({
       id: 'dark',
